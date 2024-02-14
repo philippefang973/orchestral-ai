@@ -1,0 +1,10 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start": "python app.py"
+  },
+  "author": "",
+  "license": "ISC"
+}
