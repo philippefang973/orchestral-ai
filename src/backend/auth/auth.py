@@ -5,7 +5,7 @@ def homepage():
     return redirect('http://localhost:5000/')
 
 @app.route('/signin',methods=['POST'])
-def get_data():
+def signin():
     req = request.json
     #Show form
     if not req :
@@ -19,7 +19,7 @@ def get_data():
         return jsonify({})
     
 @app.route('/signup',methods=['POST'])
-def get_data():
+def signup():
     req = request.json
     #Show form
     if not req :
@@ -33,4 +33,4 @@ def get_data():
         return jsonify({})
     
 if __name__ == '__main__':
-    app.run(host="0.0.0.0",port=5001)
+    app.run(host="0.0.0.0",port=5001,debug=True)

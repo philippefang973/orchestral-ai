@@ -1,7 +1,0 @@
-flask
-torch  --index-url https://download.pytorch.org/whl/cu118
-torchvision  --index-url https://download.pytorch.org/whl/cu118
-torchaudio --index-url https://download.pytorch.org/whl/cu118
-basic-pitch
-pretty_midi
-matplotlib

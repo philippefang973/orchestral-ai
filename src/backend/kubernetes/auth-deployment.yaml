@@ -7,16 +7,17 @@ spec:
     app: auth
   ports:
   - protocol: TCP
-    port: 80
+    port: 5001
     targetPort: 5001
-
+  type: NodePort
+  
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: auth-deployment
 spec:
-  replicas: 5
+  replicas: 3
   selector:
     matchLabels:
       app: auth
@@ -28,5 +29,6 @@ spec:
       containers:
       - name: auth
         image: auth:latest
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 5001

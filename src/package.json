@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "install-python-dependencies": "pip install -r requirements.txt",
     "start:backend": "cd backend && npm start",
     "start:frontend": "cd frontend && npm start",
     "start": "concurrently -c \"red.bold,green.bold\" --names \"frontend,backend\" \"npm run start:frontend\" \"npm run start:backend\""

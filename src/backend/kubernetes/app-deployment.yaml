@@ -7,8 +7,9 @@ spec:
     app: app
   ports:
   - protocol: TCP
-    port: 80
+    port: 5000
     targetPort: 5000
+  type: NodePort
 
 ---
 apiVersion: apps/v1
@@ -16,7 +17,7 @@ kind: Deployment
 metadata:
   name: app-deployment
 spec:
-  replicas: 5
+  replicas: 3
   selector:
     matchLabels:
       app: app
@@ -28,5 +29,6 @@ spec:
       containers:
       - name: app
         image: app:latest
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 5000

@@ -7,8 +7,9 @@ spec:
     app: dashboard
   ports:
   - protocol: TCP
-    port: 80
+    port: 5002
     targetPort: 5002
+  type: NodePort
 
 ---
 apiVersion: apps/v1
@@ -16,7 +17,7 @@ kind: Deployment
 metadata:
   name: dashboard-deployment
 spec:
-  replicas: 5
+  replicas: 3
   selector:
     matchLabels:
       app: dashboard
@@ -28,5 +29,6 @@ spec:
       containers:
       - name: dashboard
         image: dashboard:latest
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 5002
