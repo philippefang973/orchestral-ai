@@ -1,5 +1,11 @@
+from flask import Flask, jsonify, request, redirect
+app = Flask(__name__)
+@app.route('/',methods=['GET'])
+def homepage():
+    return redirect('http://localhost:5000/')
+
 @app.route('/dashboard',methods=['POST'])
-def get_data():
+def dashboard():
     req = request.json
     data = {
         'title': 'Hello',
@@ -8,10 +14,13 @@ def get_data():
     return jsonify(data)
 
 @app.route('/infos',methods=['POST'])
-def get_data():
+def infos():
     req = request.json
     data = {
         'title': 'Personal information',
         'message': ''
     }
     return jsonify(data)
+
+if __name__ == '__main__':
+    app.run(host="0.0.0.0",port=5002)

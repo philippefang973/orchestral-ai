@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "start:app":"sudo docker build -t app -f app/Dockerfile .",
-    "start:auth":"sudo docker build -t auth -f auth/Dockerfile .",
-    "start:converter":"sudo docker build -t converter -f converter/Dockerfile .",
-    "start:dashboard":"sudo docker build -t dashboard -f dashboard/Dockerfile .",
+    "start:app":"docker build -t app -f app/Dockerfile app && echo 'Docker image for app successfully built'",
+    "start:auth":"docker build -t auth -f auth/Dockerfile auth && echo 'Docker image for auth successfully built'",
+    "start:converter":"docker build -t converter -f converter/Dockerfile converter && echo 'Docker image for converter successfully built'",
+    "start:dashboard":"docker build -t dashboard -f dashboard/Dockerfile dashboard && echo 'Docker image for dashboard successfully built'",
     "start": "concurrently \"npm run start:app\" \"npm run start:auth\" \"npm run start:converter\" \"npm run start:dashboard\""
   },
   "author": "",

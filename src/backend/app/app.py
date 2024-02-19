@@ -1,11 +1,12 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, redirect
 app = Flask(__name__)
-@app.route('/',methods=['POST'])
-def get_data():
+@app.route('/',methods=['GET'])
+def homepage():
     data = {
         'title': 'Welcome to Orchestral AI',
         'message': 'Homepage'
     }
     return jsonify(data)
 
-
+if __name__ == '__main__':
+    app.run(host="0.0.0.0",port=5000)
