@@ -3,8 +3,15 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "start": "python app.py"
+    "start:app":"sudo docker build -t app -f app/Dockerfile .",
+    "start:auth":"sudo docker build -t auth -f auth/Dockerfile .",
+    "start:converter":"sudo docker build -t converter -f converter/Dockerfile .",
+    "start:dashboard":"sudo docker build -t dashboard -f dashboard/Dockerfile .",
+    "start": "concurrently \"npm run start:app\" \"npm run start:auth\" \"npm run start:converter\" \"npm run start:dashboard\""
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  }
 }
