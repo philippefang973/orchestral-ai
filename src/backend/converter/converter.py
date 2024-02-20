@@ -1,8 +1,5 @@
 from flask import Flask, jsonify, request, redirect
 app = Flask(__name__)
-@app.route('/',methods=['GET'])
-def homepage():
-    return redirect('http://localhost:5000/')
 
 @app.route('/convert',methods=['POST'])
 def convert():
