@@ -1,4 +1,15 @@
 from flask import Flask, jsonify, request, redirect
+from pymongo.mongo_client import MongoClient
+from pymongo.server_api import ServerApi
+
+uri = "mongodb+srv://philippefang973:tpalt2023@orchestralai-db.roc0uk6.mongodb.net/?retryWrites=true&w=majority"
+mongodb = MongoClient(uri, server_api=ServerApi('1'))
+try:
+    mongodb.admin.command('ping')
+    print("Pinged your deployment. You successfully connected to MongoDB!")
+except Exception as e:
+    print(e)
+
 app = Flask(__name__)
 
 @app.route('/convert',methods=['POST'])
