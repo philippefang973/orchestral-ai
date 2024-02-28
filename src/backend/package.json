@@ -17,7 +17,7 @@
     "stop:converter":"kubectl delete -f kubernetes/converter-deployment.yaml",
     "build": "concurrently \"npm run build:app\" \"npm run build:auth\" \"npm run build:converter\" \"npm run build:dashboard\"",
     "deploy": "concurrently \"npm run deploy:app\" \"npm run deploy:auth\" \"npm run deploy:converter\" \"npm run deploy:dashboard\"",
-    "start": "(minikube status > /dev/null || minikube start) && eval $(minikube docker-env) && npm run build && npm run deploy",
+    "start": "npm run build && npm run deploy",
     "stop:kubernetes": "concurrently \"npm run stop:app\" \"npm run stop:auth\" \"npm run stop:converter\" \"npm run stop:dashboard\"",
     "stop:docker":"docker rmi app:latest dashboard:latest converter:latest auth:latest 2> /dev/null",
     "stop": "npm run stop:kubernetes && npm run stop:docker"

@@ -5,7 +5,8 @@
   "scripts": {
     "start:backend": "cd backend && npm start",
     "start:frontend": "cd frontend && npm start",
-    "start": "concurrently -c \"red.bold,green.bold\" --names \"frontend,backend\" \"npm run start:frontend\" \"npm run start:backend\""
+    "start:services": "concurrently -c \"red.bold,green.bold\" --names \"frontend,backend\" \"npm run start:frontend\" \"npm run start:backend\"",
+    "start": "(minikube status > /dev/null || minikube start) && eval $(minikube docker-env) && npm run start:services"
   },
   "author": "",
   "license": "ISC",
