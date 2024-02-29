@@ -5,7 +5,7 @@
     "build:ng":"ng build",
     "build":"docker build -t angular:latest . && echo 'Docker image for angular successfully built'",
     "deploy":"kubectl apply -f kubernetes/angular-deployment.yaml",
-    "start": "npm run build && npm run deploy",
+    "start": "(minikube status > /dev/null || minikube start) && eval $(minikube docker-env) && npm run build && npm run deploy",
     "stop:kubernetes":"kubectl delete -f kubernetes/angular-deployment.yaml",
     "stop:docker":"docker rmi angular:latest 2> /dev/null",
     "stop": "npm run stop:kubernetes && npm run stop:docker"
