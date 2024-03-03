@@ -5,8 +5,11 @@
   "scripts": {
     "start:backend": "cd backend && npm start",
     "start:frontend": "cd frontend && npm start",
+    "stop:backend": "cd backend && npm stop",
+    "stop:frontend": "cd frontend && npm stop",
     "start:services": "concurrently -c \"red.bold,green.bold\" --names \"frontend,backend\" \"npm run start:frontend\" \"npm run start:backend\"",
-    "start": "(minikube status > /dev/null || minikube start) && eval $(minikube docker-env) && npm run start:services"
+    "start": "(minikube status > /dev/null || minikube start) && eval $(minikube docker-env) && npm run start:services",
+    "stop": "concurrently -c \"red.bold,green.bold\" --names \"frontend,backend\" \"npm run stop:frontend\" \"npm run stop:backend\""
   },
   "author": "",
   "license": "ISC",
