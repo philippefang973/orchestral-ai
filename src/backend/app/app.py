@@ -3,9 +3,9 @@ from flask_cors import CORS
 
 import requests
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": ["http://localhost:4200", "http://angular.default.svc.cluster.local:4200"]}})
+#CORS(app, resources={r"/*": {"origins": ["http://localhost:4200", "http://angular.default.svc.cluster.local:4200"]}})
 
-@app.route('/',methods=['GET'])
+@app.route('/',methods=['POST'])
 def homepage():
     data = {
         'title': 'Welcome to Orchestral AI',
@@ -13,27 +13,27 @@ def homepage():
     }
     return jsonify(data)
 
-@app.route('/signin',methods=['GET'])
+@app.route('/signin',methods=['POST'])
 def signin():
     response = requests.post("http://auth.default.svc.cluster.local:5001/signin",json={})
     return response.json()
 
-@app.route('/signup',methods=['GET'])
+@app.route('/signup',methods=['POST'])
 def signup():
     response = requests.post("http://auth.default.svc.cluster.local:5001/signup",json={})
     return response.json()
 
-@app.route('/dashboard',methods=['GET'])
+@app.route('/dashboard',methods=['POST'])
 def dashboard():
     response = requests.post("http://dashboard.default.svc.cluster.local:5002/dashboard",json={})
     return response.json()
 
-@app.route('/infos',methods=['GET'])
+@app.route('/infos',methods=['POST'])
 def infos():
     response = requests.post("http://dashboard.default.svc.cluster.local:5002/infos",json={})
     return response.json()
 
-@app.route('/convert',methods=['GET'])
+@app.route('/convert',methods=['POST'])
 def convert():
     response = requests.post("http://converter.default.svc.cluster.local:5003/convert",json={})
     return response.json()
