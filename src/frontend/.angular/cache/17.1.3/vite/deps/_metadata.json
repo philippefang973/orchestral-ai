@@ -1,47 +1,56 @@
 {
-  "hash": "28d3bbb2",
-  "configHash": "719e22c6",
+  "hash": "2d8d4bc2",
+  "configHash": "9a70cd1b",
   "lockfileHash": "bb7ebbbd",
-  "browserHash": "c145bb47",
+  "browserHash": "fae7775d",
   "optimized": {
     "@angular/common": {
       "src": "../../../../../node_modules/@angular/common/fesm2022/common.mjs",
       "file": "@angular_common.js",
-      "fileHash": "773714ec",
+      "fileHash": "c67bccb2",
       "needsInterop": false
     },
     "@angular/common/http": {
       "src": "../../../../../node_modules/@angular/common/fesm2022/http.mjs",
       "file": "@angular_common_http.js",
-      "fileHash": "5f901211",
+      "fileHash": "1c39f959",
       "needsInterop": false
     },
     "@angular/core": {
       "src": "../../../../../node_modules/@angular/core/fesm2022/core.mjs",
       "file": "@angular_core.js",
-      "fileHash": "04ef259c",
+      "fileHash": "30724148",
       "needsInterop": false
     },
     "@angular/forms": {
       "src": "../../../../../node_modules/@angular/forms/fesm2022/forms.mjs",
       "file": "@angular_forms.js",
-      "fileHash": "4c67d1a9",
+      "fileHash": "376a5ce5",
       "needsInterop": false
     },
     "@angular/platform-browser": {
       "src": "../../../../../node_modules/@angular/platform-browser/fesm2022/platform-browser.mjs",
       "file": "@angular_platform-browser.js",
-      "fileHash": "59e822e2",
+      "fileHash": "67ac97f1",
+      "needsInterop": false
+    },
+    "@angular/router": {
+      "src": "../../../../../node_modules/@angular/router/fesm2022/router.mjs",
+      "file": "@angular_router.js",
+      "fileHash": "c0f2eb50",
       "needsInterop": false
     },
     "rxjs": {
       "src": "../../../../../node_modules/rxjs/dist/esm5/index.js",
       "file": "rxjs.js",
-      "fileHash": "1906586f",
+      "fileHash": "fa66ce8c",
       "needsInterop": false
     }
   },
   "chunks": {
+    "chunk-I6GYWSS6": {
+      "file": "chunk-I6GYWSS6.js"
+    },
     "chunk-EHRXNVSA": {
       "file": "chunk-EHRXNVSA.js"
     },

@@ -1,44 +1,63 @@
 from flask import Flask, jsonify, request, redirect
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
+from flask_bcrypt import Bcrypt
 
-uri = "mongodb+srv://philippefang973:tpalt2023@orchestralai-db.roc0uk6.mongodb.net/?retryWrites=true&w=majority"
+uri = "mongodb+srv://philippefang973:tpalt2023@orchestralai-db.roc0uk6.mongodb.net/?retryWrites=true&w=majority&appName=OrchestralAI-DB"
 mongodb = MongoClient(uri, server_api=ServerApi('1'))
+collection = None
 try:
     mongodb.admin.command('ping')
     print("Pinged your deployment. You successfully connected to MongoDB!")
+    collection = mongodb["default"]["users"]
 except Exception as e:
     print(e)
 
 app = Flask(__name__)
+bcrypt = Bcrypt(app)
 
+# Sign in 
 @app.route('/signin',methods=['POST'])
 def signin():
-    req = request.json
-    #Show form
-    if not req :
-        data = {
-            'title': 'Sign In',
-            'message': 'form'
-        }
-        return jsonify(data)
-    #Form validation
+    global collection
+    req = request.get_json()
+    username, pwd = req.get("username"), req.get("password")
+    query = {"username": username}
+    result = collection.find_one(query)
+    data = {"msg":"failed"}
+    # Check if username exists
+    if result :
+        if bcrypt.check_password_hash(result.get("password"),pwd) :
+            app.logger.info(f"User {username} connect succesfully")
+            data = {"msg":"success","history":result.get("history")}
+        else :
+            app.logger.info(f"User {username} connect failed : Incorrect password")
     else :
-        return jsonify({})
+        app.logger.info(f"User {username} connect failed : Unknown username")
+    return jsonify(data)
     
+# Sign Up
 @app.route('/signup',methods=['POST'])
 def signup():
-    req = request.json
-    #Show form
-    if not req :
-        data = {
-            'title': 'Sign Up',
-            'message': 'form'
-        }
-        return jsonify(data)
-    #Form validation
+    global collection
+    req = request.get_json()
+    username, pwd = req.get("username"), req.get("password")
+    data = {"msg":"failed"}
+    query = {"username": username}
+    result = collection.find_one(query)
+    # Check if username is new
+    if not result :
+        hashed_password = bcrypt.generate_password_hash(pwd).decode('utf-8')
+        user_document = {"username": username, "password": hashed_password,"history": []}
+        try :
+            insert_result = collection.insert_one(user_document)
+            app.logger.info(f"User {username} created {insert_result.inserted_id}")
+            data = {"msg":"success","history":[]}
+        except Exception :
+           app.logger.info(f"Error creating new user {username}")
     else :
-        return jsonify({})
+        data = {"msg":"username already exists"}
+    return jsonify(data)
     
 if __name__ == '__main__':
     app.run(host="0.0.0.0",port=5001,debug=True)
