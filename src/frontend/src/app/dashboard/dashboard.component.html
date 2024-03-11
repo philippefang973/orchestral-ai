@@ -1,6 +1,5 @@
 <h1>OrchestralAI</h1>
 <h2>Dashboard of {{username}}</h2> 
-
 <label for="file-input">Upload an audio file</label>
 <input type="file" class="file-input" (change)="onUpload($event)" #fileUpload accept=".mp3, .wav"/>
 <div *ngIf="file">
@@ -22,3 +21,4 @@
 <section>
     History
 </section>
+<button (click)="disconnect()">Disconnect</button>

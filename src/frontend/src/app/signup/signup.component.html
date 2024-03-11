@@ -1,11 +1,27 @@
 <h1>OrchestralAI</h1>
 <h2>Sign Up</h2>
-<div class="form-group">
-    <label for="power">Username</label>
-    <input type="text" [(ngModel)]="username" required />
-    <label for="power">Password</label>
-    <input type="password" [(ngModel)]="password" required />
-    <label for="power">Confirm Password</label>
-    <input type="password" [(ngModel)]="confirmpassword" required />
-    <button (click)="onSubmit()">Confirm</button>
-</div>
+
+<form #form="ngForm" (ngSubmit)="onSubmit()">
+  <div class="form-group">
+    <label for="username">Username</label>
+    <input type="text" id="username" [(ngModel)]="username" name="username" required #usernameField="ngModel">
+    <div *ngIf="usernameField.errors?.['required'] && usernameField.touched" class="alert alert-danger">
+      Username is required.
+    </div>
+
+    <label for="password">Password</label>
+    <input type="password" id="password" [(ngModel)]="password" name="password" required #passwordField="ngModel">
+    <div *ngIf="passwordField.errors?.['required'] && passwordField.touched" class="alert alert-danger">
+      Password is required.
+    </div>
+
+    <label for="confirmPassword">Confirm Password</label>
+    <input type="password" id="confirmPassword" [(ngModel)]="confirmpassword" name="confirmpassword" required #confirmPasswordField="ngModel"
+           [class.is-invalid]="confirmPasswordField.touched && password !== confirmpassword">
+    <div *ngIf="confirmPasswordField.touched && password !== confirmpassword" class="alert alert-danger">
+      Passwords do not match.
+    </div>
+  </div>
+  <button type="submit" [disabled]="!form.valid || password !== confirmpassword">Confirm</button>
+  <p *ngIf="msg">{{msg}}</p>
+</form>

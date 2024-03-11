@@ -22,7 +22,7 @@ def dashboard():
     data = {"msg":"failed"}
     # Check if username exists
     if result :
-        data = {"msg":"success","userdata":result}
+        data = {"msg":"success","userdata":{"username": req.get("username"),"history":result.get("history")}}
     return jsonify(data)
 
 if __name__ == '__main__':

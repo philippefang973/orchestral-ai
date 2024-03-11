@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from "@angular/common/http"; 
+import { HttpClient, HttpHeaders } from "@angular/common/http"; 
 import { throwError } from "rxjs";
 import { Router } from '@angular/router';
 
@@ -17,13 +17,17 @@ export class DashboardComponent {
 
   constructor(private httpClient: HttpClient, private router: Router) { }
   ngOnInit() {
-    const apiUrl = 'http://app.default.svc.cluster.local:5000/dashboard';
+    const apiUrl = 'http://localhost:5000/dashboard';
     // Send a POST request to the server
-    const upload$ = this.httpClient.post(apiUrl, {});
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*'
+    });
+    const upload$ = this.httpClient.post(apiUrl, null,{withCredentials: true, headers:headers});
     upload$.subscribe({  
       next: (data : any)=> {
         if (Object.keys(data).length === 0) {
-          this.router.navigate(['/homepage']);
+          this.router.navigate(['/']);
         } else {
           this.username = data.userdata.username;
           this.history = data.userdata.history;
@@ -35,6 +39,24 @@ export class DashboardComponent {
     });
   }
 
+  disconnect() {
+     const apiUrl = 'http://localhost:5000/disconnect';
+    // Send a POST request to the server
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*'
+    });
+    const upload$ = this.httpClient.post(apiUrl, {withCredentials: true, headers:headers});
+    upload$.subscribe({  
+      next: (data : any)=> {
+          this.router.navigate(['/']);
+      },
+      error: (error: any) => {
+        return throwError(() => error);
+      },
+    });   
+  }
+
   // On file Select
   onUpload(event: any) {
     const file: File = event.target.files[0];
@@ -43,14 +65,17 @@ export class DashboardComponent {
       const formData = new FormData();
 
       formData.append('file', this.file, this.file.name);
-
-      const upload$ = this.httpClient.post("https://httpbin.org/post", formData);
+      const headers = new HttpHeaders({
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*'
+      });
+      const upload$ = this.httpClient.post("http://localhost:5000/convert", formData, {withCredentials: true, headers:headers});
 
       this.status = 'uploading';
 
       upload$.subscribe({  
-        next: () => {
-          this.status = 'success';
+        next: (data : any) => {
+          this.status = data.msg;
         },
         error: (error: any) => {
           this.status = 'fail';

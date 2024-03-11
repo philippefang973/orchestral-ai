@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from "@angular/common/http"; 
+import { HttpClient, HttpHeaders } from "@angular/common/http"; 
 import { throwError } from "rxjs";
 import { Router } from '@angular/router';
 
@@ -11,12 +11,16 @@ import { Router } from '@angular/router';
 export class HomepageComponent {
   constructor(private httpClient: HttpClient, private router: Router) { }
   ngOnInit() {
-    const apiUrl = 'http://app.default.svc.cluster.local:5000/';
+    const apiUrl = 'http://localhost:5000/';
     // Send a POST request to the server
-    const upload$ = this.httpClient.post(apiUrl, {});
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*'
+    });
+    const upload$ = this.httpClient.post(apiUrl, null, {withCredentials: true, headers:headers});
     upload$.subscribe({  
-      next: data => {
-        if (data=="connected") {
+      next: (data: any) => {
+        if (data.msg=="connected") {
           this.router.navigate(['/dashboard']);
         }
       },

@@ -20,7 +20,7 @@
     "start": "(minikube status > /dev/null || minikube start) && eval $(minikube docker-env) && npm run build && npm run deploy",
     "stop:kubernetes": "concurrently \"npm run stop:app\" \"npm run stop:auth\" \"npm run stop:converter\" \"npm run stop:dashboard\"",
     "stop:docker":"docker rmi app:latest dashboard:latest converter:latest auth:latest 2> /dev/null",
-    "stop": "npm run stop:kubernetes && npm run stop:docker"
+    "stop": "pkill kubectl -9 && npm run stop:kubernetes && npm run stop:docker"
   },
   "author": "",
   "license": "ISC",

@@ -20,20 +20,26 @@ bcrypt = Bcrypt(app)
 @app.route('/signin',methods=['POST'])
 def signin():
     global collection
+    print("signin")
+    app.logger.info("signin")
+    print(request)
+    app.logger.info(request)
     req = request.get_json()
+    print(req)
+    app.logger.info(req)
     username, pwd = req.get("username"), req.get("password")
     query = {"username": username}
     result = collection.find_one(query)
-    data = {"msg":"failed"}
+    data = {}
     # Check if username exists
     if result :
         if bcrypt.check_password_hash(result.get("password"),pwd) :
             app.logger.info(f"User {username} connect succesfully")
-            data = {"msg":"success","history":result.get("history")}
+            data = {"msg":"success","username": username,"history":result.get("history")}
         else :
-            app.logger.info(f"User {username} connect failed : Incorrect password")
+            data = {"msg":"Unknown username or password"}
     else :
-        app.logger.info(f"User {username} connect failed : Unknown username")
+        data = {"msg":"Unknown username or password"}
     return jsonify(data)
     
 # Sign Up
@@ -42,7 +48,7 @@ def signup():
     global collection
     req = request.get_json()
     username, pwd = req.get("username"), req.get("password")
-    data = {"msg":"failed"}
+    data = {}
     query = {"username": username}
     result = collection.find_one(query)
     # Check if username is new
@@ -52,11 +58,11 @@ def signup():
         try :
             insert_result = collection.insert_one(user_document)
             app.logger.info(f"User {username} created {insert_result.inserted_id}")
-            data = {"msg":"success","history":[]}
+            data = {"msg":"success","username": username,"history":[]}
         except Exception :
            app.logger.info(f"Error creating new user {username}")
     else :
-        data = {"msg":"username already exists"}
+        data = {"msg":"Username already exists"}
     return jsonify(data)
     
 if __name__ == '__main__':

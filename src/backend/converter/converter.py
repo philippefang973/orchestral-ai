@@ -22,7 +22,7 @@ def convert():
     req = request.get_json()
     audio_file = request.files['audio']
     username = req.get("username")
-    data = {"msg":"failed conversion"}
+    data = {"msg":"fail"}
     query = {"username": username}
     result = collection.find_one(query)
     if result :
