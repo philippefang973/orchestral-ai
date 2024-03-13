@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
+    "logs" : "kubectl get pods -o jsonpath='{.items[*].metadata.name}' | tr ' ' '\n' | while read pod; do echo \"\n$pod\" && kubectl logs \"$pod\"; done",
     "push:backend" : "kubectl port-forward --address 0.0.0.0 -n default service/app 5000:5000 &",
     "push:frontend" : "kubectl port-forward --address 0.0.0.0 -n default service/angular 4200:4200 &",
     "push:end" : "kubectl get pods",

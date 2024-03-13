@@ -20,13 +20,7 @@ bcrypt = Bcrypt(app)
 @app.route('/signin',methods=['POST'])
 def signin():
     global collection
-    print("signin")
-    app.logger.info("signin")
-    print(request)
-    app.logger.info(request)
     req = request.get_json()
-    print(req)
-    app.logger.info(req)
     username, pwd = req.get("username"), req.get("password")
     query = {"username": username}
     result = collection.find_one(query)

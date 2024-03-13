@@ -46,7 +46,7 @@ export class DashboardComponent {
       'Content-Type': 'application/json',
       'Access-Control-Allow-Origin': '*'
     });
-    const upload$ = this.httpClient.post(apiUrl, {withCredentials: true, headers:headers});
+    const upload$ = this.httpClient.post(apiUrl, null, {withCredentials: true, headers:headers});
     upload$.subscribe({  
       next: (data : any)=> {
           this.router.navigate(['/']);
@@ -64,12 +64,8 @@ export class DashboardComponent {
       this.file = file;
       const formData = new FormData();
 
-      formData.append('file', this.file, this.file.name);
-      const headers = new HttpHeaders({
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*'
-      });
-      const upload$ = this.httpClient.post("http://localhost:5000/convert", formData, {withCredentials: true, headers:headers});
+      formData.append('audio', this.file);
+      const upload$ = this.httpClient.post("http://localhost:5000/convert", formData, {withCredentials: true});
 
       this.status = 'uploading';
 

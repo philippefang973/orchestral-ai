@@ -19,9 +19,10 @@ app = Flask(__name__)
 
 @app.route('/convert',methods=['POST'])
 def convert():
-    req = request.get_json()
+    app.logger.info(request.files)
     audio_file = request.files['audio']
-    username = req.get("username")
+    username = request.form['username']
+    app.logger.info(username)
     data = {"msg":"fail"}
     query = {"username": username}
     result = collection.find_one(query)
@@ -33,7 +34,11 @@ def convert():
             collection.update_one(query, {"$push": {"history": (file_id,audio_file.filename)}})
             app.logger.info(f"User {username} converted an audio")
             result = collection.find_one(query)
-            data = {"msg":"success","history":result.get("history")}
+            for r in result.get("history") :
+                file_data = fs.get(obj_id)
+                response = send_file(file_data, mimetype='audio/mpeg', as_attachment=True)
+                response.headers["Content-Disposition"] = f"attachment; filename={file_data.filename}"
+                return response
         except Exception :
            app.logger.info(f"Error creating new user {username}")
     return jsonify(data)

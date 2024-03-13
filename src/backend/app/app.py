@@ -55,7 +55,12 @@ def dashboard():
 @app.route('/convert',methods=['POST'])
 def convert():
     if "connected" in session :
-        return requests.post("http://converter.default.svc.cluster.local:5003/convert",json={"username":session.get('connected')}).json()
+        app.logger.info(request.files)
+        multipart_form_data = {
+            'audio': (request.files['audio'].filename, request.files['audio'], request.files['audio'].mimetype)
+        }
+        return requests.post("http://converter.default.svc.cluster.local:5003/convert",
+            files=multipart_form_data,data={"username":session.get('connected')}).json()
     return jsonify({})
 
 if __name__ == '__main__':

@@ -1,7 +1,7 @@
 <h1>OrchestralAI</h1>
 <h2>Dashboard of {{username}}</h2> 
 <label for="file-input">Upload an audio file</label>
-<input type="file" class="file-input" (change)="onUpload($event)" #fileUpload accept=".mp3, .wav"/>
+<input type="file" class="file-input" (change)="onUpload($event)" #fileUpload accept=".mp3"/>
 <div *ngIf="file">
   <section class="file-info">
     File details:
@@ -18,6 +18,8 @@
     <p *ngSwitchDefault>😶 Waiting to upload...</p>
   </section>
 </div>
+<section>
+</section>
 <section>
     History
 </section>
