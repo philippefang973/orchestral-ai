@@ -54,7 +54,7 @@ def signup():
 @app.route('/dashboard',methods=['POST'])
 def dashboard():
     if "connected" in session :
-        return jsonify({"msg":"success","userdata":{"username": session.get("username"),"history":session.get("history")}})
+        return jsonify({"msg":"success","userdata":{"username": session.get("connected"),"history":session.get("history")}})
     else : 
         return jsonify({"msg":"failed"})
         #return requests.post("http://dashboard.default.svc.cluster.local:5002/dashboard",json={"username":session.get('connected')}).json()
@@ -69,7 +69,10 @@ def convert():
         response = requests.post("http://converter.default.svc.cluster.local:5003/convert",
             files=multipart_form_data,data={"username":session.get('connected')}).json()
         if "conversion" in response : 
-            session['history']+=[(request.files['audio'].filename,response.get("conversion"))]
+            if session["history"] : 
+                session['history']+=[(request.files['audio'].filename,response.get("conversion"))]
+            else : 
+                session["history"]=[(request.files['audio'].filename,response.get("conversion"))]
             session.modified = True
         return response
     return jsonify({})

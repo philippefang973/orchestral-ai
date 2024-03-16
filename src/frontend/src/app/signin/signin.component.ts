@@ -43,6 +43,8 @@ export class SigninComponent {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*'
     });
+
+    this.msg = "Connecting..."
     const upload$ = this.httpClient.post(apiUrl, postData, {withCredentials: true, headers:headers});
 
     upload$.subscribe({  

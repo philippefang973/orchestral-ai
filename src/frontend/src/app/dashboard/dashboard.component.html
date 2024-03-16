@@ -18,8 +18,8 @@
     </section>
     <section [ngSwitch]="status">
       <p *ngSwitchCase="'uploading'">⏳ Uploading...</p>
-      <p *ngSwitchCase="'success'">✅ Done!</p>
-      <p *ngSwitchCase="'fail'">❌ Error!</p>
+      <p *ngSwitchCase="'success'">✅ Converted</p>
+      <p *ngSwitchCase="'fail'">❌ Error encountered, please retry</p>
       <p *ngSwitchDefault>😶 Waiting to upload...</p>
     </section>
     <section *ngIf='conversion'>
