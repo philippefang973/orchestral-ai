@@ -1,6 +1,8 @@
-from flask import Flask, jsonify, request, session, redirect, url_for
+from flask import Flask, jsonify, request, session, redirect, url_for, send_file
 from flask_cors import CORS
 from flask_session import Session
+from zipfile import ZipFile
+import io
 
 import requests
 app = Flask(__name__)
@@ -19,7 +21,9 @@ def homepage():
 @app.route('/disconnect',methods=['POST'])
 def disconnect():
     app.logger.info(f"User {session.get('connected')} disconnected")
-    session.pop('connected', None)
+    session.clear()
+    #session.pop('connected', None)
+    #session.pop('history', None)
     session.modified = True
     return jsonify({})
 
@@ -29,8 +33,9 @@ def signin():
         return dashboard()
     else :
         response = requests.post("http://auth.default.svc.cluster.local:5001/signin",json=request.get_json()).json()
-        if response["msg"]=="success" :
-            session['connected']=request.get_json().get("username")
+        if response.get('msg')=='success' :
+            session['connected']=response.get("username")
+            session['history']=response.get("history")
             session.modified = True
         return response
 
@@ -40,17 +45,19 @@ def signup():
         return dashboard()
     else :
         response = requests.post("http://auth.default.svc.cluster.local:5001/signup",json=request.get_json()).json()
-        if response["msg"]=="success" :
+        if response.get('msg')=='success' :
             session['connected']=request.get_json().get("username")
+            session['history']=request.get_json().get("history")
             session.modified = True
-    
         return response
 
 @app.route('/dashboard',methods=['POST'])
 def dashboard():
     if "connected" in session :
-        return requests.post("http://dashboard.default.svc.cluster.local:5002/dashboard",json={"username":session.get('connected')}).json()
-    return jsonify({})
+        return jsonify({"msg":"success","userdata":{"username": session.get("username"),"history":session.get("history")}})
+    else : 
+        return jsonify({"msg":"failed"})
+        #return requests.post("http://dashboard.default.svc.cluster.local:5002/dashboard",json={"username":session.get('connected')}).json()
 
 @app.route('/convert',methods=['POST'])
 def convert():
@@ -59,8 +66,12 @@ def convert():
         multipart_form_data = {
             'audio': (request.files['audio'].filename, request.files['audio'], request.files['audio'].mimetype)
         }
-        return requests.post("http://converter.default.svc.cluster.local:5003/convert",
+        response = requests.post("http://converter.default.svc.cluster.local:5003/convert",
             files=multipart_form_data,data={"username":session.get('connected')}).json()
+        if "conversion" in response : 
+            session['history']+=[(request.files['audio'].filename,response.get("conversion"))]
+            session.modified = True
+        return response
     return jsonify({})
 
 if __name__ == '__main__':

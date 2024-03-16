@@ -10,9 +10,11 @@ import { Router } from '@angular/router';
 })
 export class DashboardComponent {
   username: string;
-  history: Array<string>;
+  historyMsg : string = "⏳ Loading..."
+  history: [string, string][] = [];
   status: "initial" | "uploading" | "success" | "fail" = "initial"; // Variable to store file status
   progress: number = 0;
+  conversion: string;
   file: File | null = null; // Variable to store file
 
   constructor(private httpClient: HttpClient, private router: Router) { }
@@ -26,17 +28,38 @@ export class DashboardComponent {
     const upload$ = this.httpClient.post(apiUrl, null,{withCredentials: true, headers:headers});
     upload$.subscribe({  
       next: (data : any)=> {
-        if (Object.keys(data).length === 0) {
+        if (data.msg!="success") {
           this.router.navigate(['/']);
         } else {
           this.username = data.userdata.username;
           this.history = data.userdata.history;
+          this.historyMsg = ""; 
         }
       },
       error: (error: any) => {
         return throwError(() => error);
       },
     });
+  }
+
+  getAudioSource(base64Content: string): string {
+    const audioBlob = this.base64ToBlob(base64Content, 'audio/mpeg');
+    return URL.createObjectURL(audioBlob);
+  }
+
+  base64ToBlob(base64Content: string, contentType: string): Blob {
+    const byteCharacters = atob(base64Content);
+    const byteArrays = [];
+    for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+      const slice = byteCharacters.slice(offset, offset + 512);
+      const byteNumbers = new Array(slice.length);
+      for (let i = 0; i < slice.length; i++) {
+        byteNumbers[i] = slice.charCodeAt(i);
+      }
+      const byteArray = new Uint8Array(byteNumbers);
+      byteArrays.push(byteArray);
+    }
+    return new Blob(byteArrays, { type: contentType });
   }
 
   disconnect() {
@@ -72,6 +95,9 @@ export class DashboardComponent {
       upload$.subscribe({  
         next: (data : any) => {
           this.status = data.msg;
+          if (this.status=="success") {
+            this.conversion = data.conversion;
+          }
         },
         error: (error: any) => {
           this.status = 'fail';

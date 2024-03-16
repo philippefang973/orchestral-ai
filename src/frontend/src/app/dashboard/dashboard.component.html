@@ -1,26 +1,43 @@
 <h1>OrchestralAI</h1>
 <h2>Dashboard of {{username}}</h2> 
-<label for="file-input">Upload an audio file</label>
-<input type="file" class="file-input" (change)="onUpload($event)" #fileUpload accept=".mp3"/>
-<div *ngIf="file">
-  <section class="file-info">
-    File details:
-    <ul>
-      <li>Name: {{file.name}}</li>
-      <li>Type: {{file.type}}</li>
-      <li>Size: {{file.size}} bytes</li>
-    </ul>
-  </section>
-  <section [ngSwitch]="status">
-    <p *ngSwitchCase="'uploading'">⏳ Uploading...</p>
-    <p *ngSwitchCase="'success'">✅ Done!</p>
-    <p *ngSwitchCase="'fail'">❌ Error!</p>
-    <p *ngSwitchDefault>😶 Waiting to upload...</p>
-  </section>
+<div>
+<button (click)="disconnect()">Disconnect</button>
 </div>
 <section>
+  <h3>Convert a song!</h3>
+  <label for="file-input">Upload an audio file</label>
+  <input type="file" class="file-input" (change)="onUpload($event)" #fileUpload accept=".mp3"/>
+  <div *ngIf="file">
+    <section class="file-info">
+      File details:
+      <ul>
+        <li>Name: {{file.name}}</li>
+        <li>Type: {{file.type}}</li>
+        <li>Size: {{file.size}} bytes</li>
+      </ul>
+    </section>
+    <section [ngSwitch]="status">
+      <p *ngSwitchCase="'uploading'">⏳ Uploading...</p>
+      <p *ngSwitchCase="'success'">✅ Done!</p>
+      <p *ngSwitchCase="'fail'">❌ Error!</p>
+      <p *ngSwitchDefault>😶 Waiting to upload...</p>
+    </section>
+    <section *ngIf='conversion'>
+      <audio controls>
+        <source [src]="getAudioSource(conversion)" type="audio/mpeg">
+        Your browser does not support the audio element.
+      </audio>
+    </section>
+  </div>
 </section>
 <section>
-    History
+    <h3>History</h3>
+      {{ historyMsg }}
+      <div *ngFor="let tuple of history">
+      {{ tuple[0] }}
+      <audio controls>
+        <source [src]="getAudioSource(tuple[1])" type="audio/mpeg">
+        Your browser does not support the audio element.
+      </audio>
+    </div>
 </section>
-<button (click)="disconnect()">Disconnect</button>
