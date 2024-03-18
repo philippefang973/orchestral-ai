@@ -32,13 +32,22 @@ export class DashboardComponent {
           this.router.navigate(['/']);
         } else {
           this.username = data.userdata.username;
-          this.history = data.userdata.history;
-          this.historyMsg = ""; 
+          const apiUrl2 = 'http://localhost:5000/history';
+          const upload2$ = this.httpClient.post(apiUrl2, null,{withCredentials: true, headers:headers});
+          upload2$.subscribe({  
+          next: (data2 : any)=> {
+              this.historyMsg = ""; 
+              this.history = data2.history;
+            },
+            error: (error2: any) => {
+              return throwError(() => error2);
+            }
+          });
         }
       },
       error: (error: any) => {
         return throwError(() => error);
-      },
+      }
     });
   }
 

@@ -1,10 +1,23 @@
+import sys
 from flask import Flask, jsonify, request, session, redirect, url_for, send_file
 from flask_cors import CORS
 from flask_session import Session
 from zipfile import ZipFile
 import io
-
 import requests
+
+host,auth_service_ip,converter_service_ip = "","",""
+try :
+    if sys.argv[1]=="local" :
+        host = "127.0.0.1"
+        auth_service_ip = "http://localhost:5001"
+        converter_service_ip = "http://localhost:5003"
+    if sys.argv[1]=="deploy" :
+        host = "0.0.0.0"
+        auth_service_ip = "http://auth.default.svc.cluster.local:5001"
+        converter_service_ip = "http://converter.default.svc.cluster.local:5003"
+except Exception as e : print(e)
+
 app = Flask(__name__)
 CORS(app, supports_credentials=True, resources={r"/*": {"origins": ["http://localhost:4200","http://angular.default.svc.cluster.local:4200"]}})
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
@@ -29,22 +42,38 @@ def disconnect():
 
 @app.route('/signin',methods=['POST'])
 def signin():
+    global auth_service_ip
     if "connected" in session :
         return dashboard()
     else :
-        response = requests.post("http://auth.default.svc.cluster.local:5001/signin",json=request.get_json()).json()
+        response = requests.post(auth_service_ip+"/signin",json=request.get_json()).json()
         if response.get('msg')=='success' :
-            session['connected']=response.get("username")
-            session['history']=response.get("history")
+            session['connected']=request.get_json().get("username")
             session.modified = True
         return response
 
+@app.route('/history',methods=['POST'])
+def history() :
+    global auth_service_ip
+    if "connected" in session :
+        if "history" in session :
+            return jsonify({"history":session.get("history")})
+        else :
+            response = requests.post(auth_service_ip+"/history",json={"username":session.get('connected')}).json()
+            if "history" in response :
+                session['history']=response.get("history")
+                session.modified = True
+            return response 
+    return jsonify({})
+
+
 @app.route('/signup',methods=['POST'])
 def signup():
+    global auth_service_ip
     if "connected" in session :
         return dashboard()
     else :
-        response = requests.post("http://auth.default.svc.cluster.local:5001/signup",json=request.get_json()).json()
+        response = requests.post(auth_service_ip+"/signup",json=request.get_json()).json()
         if response.get('msg')=='success' :
             session['connected']=request.get_json().get("username")
             session['history']=request.get_json().get("history")
@@ -57,16 +86,16 @@ def dashboard():
         return jsonify({"msg":"success","userdata":{"username": session.get("connected"),"history":session.get("history")}})
     else : 
         return jsonify({"msg":"failed"})
-        #return requests.post("http://dashboard.default.svc.cluster.local:5002/dashboard",json={"username":session.get('connected')}).json()
 
 @app.route('/convert',methods=['POST'])
 def convert():
+    global converter_service_ip
     if "connected" in session :
         app.logger.info(request.files)
         multipart_form_data = {
             'audio': (request.files['audio'].filename, request.files['audio'], request.files['audio'].mimetype)
         }
-        response = requests.post("http://converter.default.svc.cluster.local:5003/convert",
+        response = requests.post(converter_service_ip+"/convert",
             files=multipart_form_data,data={"username":session.get('connected')}).json()
         if "conversion" in response : 
             if session["history"] : 
@@ -78,4 +107,4 @@ def convert():
     return jsonify({})
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0",port=5000,debug=True)
+    app.run(host=host,port=5000,debug=True)

@@ -7,4 +7,4 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
-CMD ["python", "auth.py"]
+CMD ["python", "auth.py","deploy"]

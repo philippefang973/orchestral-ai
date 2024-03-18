@@ -8,7 +8,8 @@
     "start": "(minikube status > /dev/null || minikube start) && eval $(minikube docker-env) && npm run build && npm run deploy",
     "stop:kubernetes":"kubectl delete -f kubernetes/angular-deployment.yaml",
     "stop:docker":"docker rmi angular:latest 2> /dev/null",
-    "stop": "pkill kubectl -9 && npm run stop:kubernetes && npm run stop:docker"
+    "stop": "pkill kubectl -9 && npm run stop:kubernetes && npm run stop:docker",
+    "local":"npm install && ng serve"
   },
   "private": true,
   "dependencies": {

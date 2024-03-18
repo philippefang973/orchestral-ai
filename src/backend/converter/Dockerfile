@@ -7,4 +7,4 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
-CMD ["python", "converter.py"]
+CMD ["python", "converter.py","deploy"]

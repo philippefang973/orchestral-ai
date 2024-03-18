@@ -4,26 +4,29 @@ from pymongo.server_api import ServerApi
 from flask_bcrypt import Bcrypt
 from gridfs import GridFS
 import io
+import sys
 import base64
 
 uri = "mongodb+srv://philippefang973:tpalt2023@orchestralai-db.roc0uk6.mongodb.net/?retryWrites=true&w=majority&appName=OrchestralAI-DB"
 mongodb = MongoClient(uri, server_api=ServerApi('1'))
-fs, collection = None, None
+fs, collection, host = None, None, ""
 try:
     mongodb.admin.command('ping')
     print("Pinged your deployment. You successfully connected to MongoDB!")
     fs = GridFS(mongodb["default"])
     collection = mongodb["default"]["users"]
+    host = "0.0.0.0" if sys.argv[1]=="deploy" else "127.0.0.1"
 except Exception as e:
     print(e)
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
 
+
 # Sign in 
 @app.route('/signin',methods=['POST'])
 def signin():
-    global collection, fs
+    global collection
     req = request.get_json()
     username, pwd = req.get("username"), req.get("password")
     query = {"username": username}
@@ -33,20 +36,31 @@ def signin():
     if result :
         if bcrypt.check_password_hash(result.get("password"),pwd) :
             app.logger.info(f"User {username} connect succesfully")
-            files = []
-            for r in result.get("history") :
-                buffer = io.BytesIO()
-                file_data = fs.get(r[0])
-                serialized_data = base64.b64encode(file_data.read()).decode('utf-8')
-                files+=[(r[1],serialized_data)]
-            #response =  send_file(zip_buffer, mimetype='application/zip', as_attachment=True, download_name='history.zip')
-            data = {"msg":"success","username": username,"history":files}
+            data = {"msg":"success"}
         else :
             data = {"msg":"Unknown username or password"}
     else :
         data = {"msg":"Unknown username or password"}
     return jsonify(data)
-    
+ 
+@app.route('/history',methods=['POST'])   
+def history() :
+    global collection, fs
+    req = request.get_json()
+    username = req.get("username")
+    query = {"username": username}
+    result = collection.find_one(query)
+    if result :
+        history = result.get("history")
+        files= []
+        for r in history :
+            file_data = fs.get(r[0])
+            serialized_data = base64.b64encode(file_data.read()).decode('utf-8')
+            files+=[(r[1],serialized_data)]
+        return jsonify({"history":files})
+    return jsonify({})
+
+
 # Sign Up
 @app.route('/signup',methods=['POST'])
 def signup():
@@ -72,4 +86,4 @@ def signup():
     return jsonify(data)
     
 if __name__ == '__main__':
-    app.run(host="0.0.0.0",port=5001,debug=True)
+    app.run(host=host,port=5001,debug=True)

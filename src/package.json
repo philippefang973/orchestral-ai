@@ -14,7 +14,10 @@
     "stop:frontend": "cd frontend && npm stop",
     "start:services": "concurrently -c \"red.bold,green.bold\" --names \"frontend,backend\" \"npm run start:frontend\" \"npm run start:backend\"",
     "start": "(minikube status > /dev/null || minikube start) && eval $(minikube docker-env) && npm run start:services",
-    "stop": "concurrently -c \"red.bold,green.bold\" --names \"frontend,backend\" \"npm run stop:frontend\" \"npm run stop:backend\""
+    "stop": "concurrently -c \"red.bold,green.bold\" --names \"frontend,backend\" \"npm run stop:frontend\" \"npm run stop:backend\"",
+    "local:backend": "cd backend && npm run local",
+    "local:frontend": "cd frontend && npm run local",
+    "local": "concurrently -c \"red.bold,green.bold\" --names \"frontend,backend\" \"npm run local:frontend\" \"npm run local:backend\""
   },
   "author": "",
   "license": "ISC",
