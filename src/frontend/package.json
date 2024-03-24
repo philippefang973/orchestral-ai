@@ -2,14 +2,14 @@
   "name": "frontend",
   "version": "0.0.0",
   "scripts": {
-    "build:ng":"ng build",
-    "build":"docker build -t angular:latest . && echo 'Docker image for angular successfully built'",
-    "deploy":"kubectl apply -f kubernetes/angular-deployment.yaml",
+    "build:ng": "ng build",
+    "build": "docker build -t angular:latest . && echo 'Docker image for angular successfully built'",
+    "deploy": "kubectl apply -f kubernetes/angular-deployment.yaml",
     "start": "(minikube status > /dev/null || minikube start) && eval $(minikube docker-env) && npm run build && npm run deploy",
-    "stop:kubernetes":"kubectl delete -f kubernetes/angular-deployment.yaml",
-    "stop:docker":"docker rmi angular:latest 2> /dev/null",
+    "stop:kubernetes": "kubectl delete -f kubernetes/angular-deployment.yaml",
+    "stop:docker": "docker rmi angular:latest 2> /dev/null",
     "stop": "pkill kubectl -9 && npm run stop:kubernetes && npm run stop:docker",
-    "local":"npm install && ng serve"
+    "local": "npm install && ng serve"
   },
   "private": true,
   "dependencies": {
@@ -21,6 +21,7 @@
     "@angular/platform-browser": "^17.1.0",
     "@angular/platform-browser-dynamic": "^17.1.0",
     "@angular/router": "^17.1.0",
+    "bulma": "^1.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.3"

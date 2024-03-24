@@ -5,22 +5,22 @@
   <div class="form-group">
     <label for="username">Username</label>
     <input type="text" id="username" [(ngModel)]="username" name="username" required #usernameField="ngModel">
-    <div *ngIf="usernameField.errors?.['required'] && usernameField.touched" class="alert alert-danger">
+    <span *ngIf="usernameField.errors?.['required'] && usernameField.touched" class="alert">
       Username is required.
-    </div>
-
+    </span>
+    <br/>
     <label for="password">Password</label>
     <input type="password" id="password" [(ngModel)]="password" name="password" required #passwordField="ngModel">
-    <div *ngIf="passwordField.errors?.['required'] && passwordField.touched" class="alert alert-danger">
+    <span *ngIf="passwordField.errors?.['required'] && passwordField.touched" class="alert">
       Password is required.
-    </div>
-
+    </span>
+    <br/>
     <label for="confirmPassword">Confirm Password</label>
     <input type="password" id="confirmPassword" [(ngModel)]="confirmpassword" name="confirmpassword" required #confirmPasswordField="ngModel"
            [class.is-invalid]="confirmPasswordField.touched && password !== confirmpassword">
-    <div *ngIf="confirmPasswordField.touched && password !== confirmpassword" class="alert alert-danger">
+    <span *ngIf="confirmPasswordField.touched && password !== confirmpassword" class="alert">
       Passwords do not match.
-    </div>
+    </span>
   </div>
   <button type="submit" [disabled]="!form.valid || password !== confirmpassword">Confirm</button>
   <p *ngIf="msg">{{msg}}</p>

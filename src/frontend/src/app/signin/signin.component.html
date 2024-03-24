@@ -4,13 +4,13 @@
   <div class="form-group">
     <label for="username">Username</label>
     <input type="text" id="username" [(ngModel)]="username" name="username" required #usernameField="ngModel">
-    <div *ngIf="usernameField.errors?.['required'] && usernameField.touched" class="alert alert-danger">
+    <div *ngIf="usernameField.errors?.['required'] && usernameField.touched" class="alert">
       Username is required.
     </div>
-
+    <br/>
     <label for="password">Password</label>
     <input type="password" id="password" [(ngModel)]="password" name="password" required #passwordField="ngModel">
-    <div *ngIf="passwordField.errors?.['required'] && passwordField.touched" class="alert alert-danger">
+    <div *ngIf="passwordField.errors?.['required'] && passwordField.touched" class="alert">
       Password is required.
     </div>
   </div>
