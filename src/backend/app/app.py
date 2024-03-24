@@ -91,7 +91,6 @@ def dashboard():
 def convert():
     global converter_service_ip
     if "connected" in session :
-        app.logger.info(request.files)
         multipart_form_data = {
             'audio': (request.files['audio'].filename, request.files['audio'], request.files['audio'].mimetype)
         }

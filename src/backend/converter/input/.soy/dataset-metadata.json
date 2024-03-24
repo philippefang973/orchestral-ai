@@ -1,0 +1,39 @@
+{
+  "id": "philippefang/orchestralai-input",
+  "id_no": 4649031,
+  "datasetSlugNullable": "orchestralai-input",
+  "ownerUserNullable": "philippefang",
+  "usabilityRatingNullable": 0.375,
+  "titleNullable": "Orchestral AI input",
+  "subtitleNullable": "",
+  "descriptionNullable": "",
+  "datasetId": 4649031,
+  "datasetSlug": "orchestralai-input",
+  "hasDatasetSlug": true,
+  "ownerUser": "philippefang",
+  "hasOwnerUser": true,
+  "usabilityRating": 0.375,
+  "hasUsabilityRating": true,
+  "totalViews": 3,
+  "totalVotes": 0,
+  "totalDownloads": 0,
+  "title": "Orchestral AI input",
+  "hasTitle": true,
+  "subtitle": "",
+  "hasSubtitle": true,
+  "description": "",
+  "hasDescription": true,
+  "isPrivate": true,
+  "keywords": [
+    "music"
+  ],
+  "licenses": [
+    {
+      "nameNullable": "CC0-1.0",
+      "name": "CC0-1.0",
+      "hasName": true
+    }
+  ],
+  "collaborators": [],
+  "data": []
+}

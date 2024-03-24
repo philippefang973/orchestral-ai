@@ -1,0 +1,20 @@
+{
+  "id": "philippefang/orchestralai",
+  "id_no": 53059130,
+  "title": "orchestralAI",
+  "code_file": "orchestral-ai.ipynb",
+  "language": "python",
+  "kernel_type": "notebook",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_tpu": false,
+  "enable_internet": true,
+  "keywords": [],
+  "dataset_sources": [
+    "philippefang/orchestralai-input",
+    "philippefang/sonanita-sf2"
+  ],
+  "kernel_sources": [],
+  "competition_sources": [],
+  "model_sources": []
+}

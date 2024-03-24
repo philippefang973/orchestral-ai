@@ -9,11 +9,12 @@ import sys
 import base64
 
 uri = "mongodb+srv://philippefang973:tpalt2023@orchestralai-db.roc0uk6.mongodb.net/?retryWrites=true&w=majority&appName=OrchestralAI-DB"
-mongodb = MongoClient(uri, server_api=ServerApi('1'))
+mongodb = None
 fs, collection, host = None, None, ""
 try:
+    mongodb = MongoClient(uri, server_api=ServerApi('1'))
     mongodb.admin.command('ping')
-    print("Pinged your deployment. You successfully connected to MongoDB!")
+    print("Successfully connected to MongoDB")
     fs = GridFS(mongodb["default"])
     collection = mongodb["default"]["users"]
     host = "0.0.0.0" if sys.argv[1]=="deploy" else "127.0.0.1"
@@ -33,10 +34,7 @@ def convert():
     if result :
         try : 
             app.logger.info(f"User {username} uploaded: {type(audio_file)}")
-            #a = audio_file.read()
-            #app.logger.info(io.BytesIO(a))
-            #app.logger.info(io.BytesIO(a).getvalue())
-            converted_audio = audio_conversion.convert(audio_file)
+            converted_audio = audio_conversion.convert(audio_file,username)
             file_id = fs.put(converted_audio, filename=converted_audio.filename, content_type=converted_audio.mimetype)
             collection.update_one(query, {"$push": {"history": (file_id,audio_file.filename)}})
             app.logger.info(f"User {username} converted an audio")
