@@ -3,6 +3,7 @@ from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from gridfs import GridFS
 import audio_conversion
+import audio_conversion_local
 from zipfile import ZipFile
 import io
 import sys
@@ -34,7 +35,7 @@ def convert():
     if result :
         try : 
             app.logger.info(f"User {username} uploaded: {type(audio_file)}")
-            converted_audio = audio_conversion.convert(audio_file,username)
+            converted_audio = audio_conversion_local.convert(audio_file,username,app.logger.info)
             file_id = fs.put(converted_audio, filename=converted_audio.filename, content_type=converted_audio.mimetype)
             collection.update_one(query, {"$push": {"history": (file_id,audio_file.filename)}})
             app.logger.info(f"User {username} converted an audio")

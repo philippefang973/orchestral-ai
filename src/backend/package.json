@@ -18,10 +18,10 @@
     "stop:kubernetes": "concurrently \"npm run stop:app\" \"npm run stop:auth\" \"npm run stop:converter\"",
     "stop:docker":"docker rmi app:latest converter:latest auth:latest 2> /dev/null",
     "stop": "pkill kubectl -9 && npm run stop:kubernetes && npm run stop:docker",
-    "local:app":"pip install -r app/requirements.txt && python app/app.py local",
-    "local:auth":"pip install -r auth/requirements.txt && python auth/auth.py local",
-    "local:converter":"pip install -r converter/requirements.txt && python converter/converter.py local",  
-    "local": "concurrently \"npm run local:app\" \"npm run local:auth\" \"npm run local:converter\""
+    "local:app":"python app/app.py local",
+    "local:auth":"python auth/auth.py local",
+    "local:converter":"python converter/converter.py local",  
+    "local": "pip install -r requirements.txt && concurrently \"npm run local:app\" \"npm run local:auth\" \"npm run local:converter\""
   },
   "author": "",
   "license": "ISC",

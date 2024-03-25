@@ -1,3 +1,4 @@
+Werkzeug==2.2.2
 flask
 flask_cors
 pymongo[serv]

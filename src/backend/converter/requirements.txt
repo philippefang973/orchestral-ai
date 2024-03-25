@@ -1,3 +1,4 @@
+Werkzeug==2.2.2
 flask
 flask_cors
 pymongo[serv]
@@ -5,7 +6,8 @@ requests
 soundfile
 numpy
 kaggle
-# torch  --index-url https://download.pytorch.org/whl/cu118
-# torchvision  --index-url https://download.pytorch.org/whl/cu118
-# torchaudio --index-url https://download.pytorch.org/whl/cu118
-# matplotlib
+spleeter
+basic-pitch
+pydub
+pysndfx
+midi2audio
