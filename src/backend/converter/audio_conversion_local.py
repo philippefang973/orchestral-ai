@@ -5,16 +5,17 @@ import sys
 import subprocess as proc 
 import time
 import random
+import mimetypes
 
 import soundfile as sf
 from pydub import AudioSegment
 from pysndfx import AudioEffectsChain
 
-def convert(filestorage,user,logger) :
+def convert(filestorage,user,logger=print) :
 	b = io.BytesIO(filestorage.read())
 	audio, sr = sf.read(b)
 	audio = audio[:30*sr]
-	fn= filestorage.filename.split(".")[0]
+	fn = filestorage.filename.split(".")[0]
 	proc.run(f"mkdir converter/input/{user}".split(" "))
 	proc.run(f"mkdir converter/output/{user}".split(" "))
 	sf.write(f"converter/input/{user}/{fn}.wav",audio,sr)
@@ -45,24 +46,55 @@ def convert(filestorage,user,logger) :
 	soundfont_path = "converter/kaggle/sonanita-sf2"
 	soundfont_files = os.listdir(soundfont_path)
 
-	vocal_sf = [sf2 for sf2 in soundfont_files if "Violins Staccato" in sf2]
-	bass_sf = [sf2 for sf2 in soundfont_files if "Brass" in sf2 or "Basses" in sf2]
-	other_sf = [sf2 for sf2 in soundfont_files if "Concert Harp" in sf2]
-	drums_sf = [sf2 for sf2 in soundfont_files if "Keys" in sf2]
+	brass_sf = [sf2 for sf2 in soundfont_files if "Brass" in sf2 and "Bass" not in sf2]
+	brass_bass_sf = [sf2 for sf2 in soundfont_files if "Brass" in sf2 and "Bass" in sf2]
+	keys_sf = [sf2 for sf2 in soundfont_files if "Keys" in sf2]
+	percussions_sf = [sf2 for sf2 in soundfont_files if "Percussion" in sf2]
+	string_sf = [sf2 for sf2 in soundfont_files if "Strings" in sf2 and "Bass" not in sf2]
+	string_bass_sf = [sf2 for sf2 in soundfont_files if "Strings" in sf2 and "Bass" in sf2]
+	woodwind_sf = [sf2 for sf2 in soundfont_files if "Woodwinds" in sf2 and "Bass" not in sf2]
+	woodwind_bass_sf = [sf2 for sf2 in soundfont_files if "Woodwinds" in sf2 and "Bass" in sf2]
 
 	midi_files = [f for f in os.listdir(f"converter/output/{user}/midis")]
 
 	synth_dir = f"converter/output/{user}/synths"
 	for midi in midi_files :
-		sfz = ""
-		if "vocals" in midi : sfz = os.path.join(soundfont_path,random.choice(vocal_sf))
-		if "drums" in midi : sfz = os.path.join(soundfont_path,random.choice(bass_sf))
-		if "bass" in midi : sfz = os.path.join(soundfont_path,random.choice(other_sf))
-		if "other" in midi : sfz = os.path.join(soundfont_path,random.choice(drums_sf))
-		logger(sfz)
 		midi_path = os.path.join(f"converter/output/{user}/midis",midi)
-		synth_path = os.path.join(synth_dir,midi.split("_")[0]+"_synths.wav")
-		proc.run(["midi2audio","-s",sfz,midi_path,synth_path])
+		if "vocals" in midi : 
+			sfz1 = os.path.join(soundfont_path,random.choice(string_sf))
+			sfz2 = os.path.join(soundfont_path,random.choice(brass_sf))
+			sfz3 = os.path.join(soundfont_path,random.choice(woodwind_sf))
+			logger(sfz1)
+			synth_path = os.path.join(synth_dir,midi.split("_")[0]+"_synth1.wav")
+			proc.run(["midi2audio","-r","44100","-s",sfz1,midi_path,synth_path])			
+			logger(sfz2)
+			synth_path = os.path.join(synth_dir,midi.split("_")[0]+"_synth2.wav")
+			proc.run(["midi2audio","-r","44100","-s",sfz2,midi_path,synth_path])
+			logger(sfz3)
+			synth_path = os.path.join(synth_dir,midi.split("_")[0]+"_synth3.wav")
+			proc.run(["midi2audio","-r","44100","-s",sfz3,midi_path,synth_path])	
+		elif "bass" in midi : 
+			sfz1 = os.path.join(soundfont_path,random.choice(string_bass_sf))
+			sfz2 = os.path.join(soundfont_path,random.choice(brass_bass_sf))
+			sfz3 = os.path.join(soundfont_path,random.choice(woodwind_bass_sf))
+			logger(sfz1)
+			synth_path = os.path.join(synth_dir,midi.split("_")[0]+"_synth1.wav")
+			proc.run(["midi2audio","-r","44100","-s",sfz1,midi_path,synth_path])			
+			logger(sfz2)
+			synth_path = os.path.join(synth_dir,midi.split("_")[0]+"_synth2.wav")
+			proc.run(["midi2audio","-r","44100","-s",sfz2,midi_path,synth_path])
+			logger(sfz3)
+			synth_path = os.path.join(synth_dir,midi.split("_")[0]+"_synth3.wav")
+			proc.run(["midi2audio","-r","44100","-s",sfz3,midi_path,synth_path])
+		else :
+			sfz = ""
+			if "drums" in midi : 
+				sfz = os.path.join(soundfont_path,random.choice(percussions_sf))
+			if "other" in midi : 
+				sfz = os.path.join(soundfont_path,random.choice(keys_sf))
+			logger(sfz)
+			synth_path = os.path.join(synth_dir,midi.split("_")[0]+"_synth.wav")
+			proc.run(["midi2audio","-r","44100","-s",sfz,midi_path,synth_path])
 	logger("synths generated")
 	now_synth = time.time()-now_synth
 
@@ -81,7 +113,8 @@ def convert(filestorage,user,logger) :
 		AudioEffectsChain()
 		.reverb()
 	)
-	fx(f"converter/output/{user}/result.wav", f"converter/output/{user}/result_reverb.wav")
+	output = f"{fn}_converted.wav"
+	fx(f"converter/output/{user}/result.wav", f"converter/output/{user}/{output}")
 
 	logger(f"spleeter ({now_spleeter} seconds)")
 	logger(f"basic pitch ({now_basicp} seconds)")
@@ -89,7 +122,7 @@ def convert(filestorage,user,logger) :
 	logger(f"overlay ({time.time()-now_overlay} seconds)")
 	logger(f"done converting ({time.time()-now} seconds)")
 
-	converted, sr = sf.read(f"converter/output/{user}/result_reverb.wav")
+	converted, sr = sf.read(f"converter/output/{user}/{output}")
 	audio_bytes = None
 	with io.BytesIO() as bytes_io:
 		sf.write(bytes_io, converted, sr, format='wav')
@@ -97,4 +130,4 @@ def convert(filestorage,user,logger) :
 		audio_bytes = bytes_io.read()
 	proc.run(f"rm -rf converter/input/{user}".split(" "))
 	proc.run(f"rm -rf converter/output/{user}".split(" "))
-	return audio_bytes
+	return audio_bytes, output, mimetypes.guess_type(f"converter/output/{user}/{output}")[0]

@@ -2,7 +2,6 @@ from flask import Flask, jsonify, request, redirect, send_file
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from gridfs import GridFS
-import audio_conversion
 import audio_conversion_local
 from zipfile import ZipFile
 import io
@@ -35,9 +34,9 @@ def convert():
     if result :
         try : 
             app.logger.info(f"User {username} uploaded: {type(audio_file)}")
-            converted_audio = audio_conversion_local.convert(audio_file,username,app.logger.info)
-            file_id = fs.put(converted_audio, filename=converted_audio.filename, content_type=converted_audio.mimetype)
-            collection.update_one(query, {"$push": {"history": (file_id,audio_file.filename)}})
+            converted_audio, filename, mimetype = audio_conversion_local.convert(audio_file,username,app.logger.info)
+            file_id = fs.put(converted_audio, filename=filename, content_type=mimetype)
+            collection.update_one(query, {"$push": {"history": (file_id,filename)}})
             app.logger.info(f"User {username} converted an audio")
             file_data = fs.get(file_id)
             serialized_data = base64.b64encode(file_data.read()).decode('utf-8')

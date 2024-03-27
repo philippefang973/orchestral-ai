@@ -6,17 +6,19 @@ This source code consists of :
 - Frontend in Angular divided in components (homepage, dashboard, sigin, signup) 
 
 ## Installation
-Make sure to have `pip`, `python` and `npm` installed.
+Python 3.10 and Node 20.9.0 versions are used.
 For deployment, `docker`, `kubectl` and `minikube` are required.
+Make sure to have 'ffmpeg', 'sox' and 'fluidsynth' installed in the system
+
 The project needs to be launched from src/
 Run `npm install`
 
 ## Local Run
-Run `npm run local`
+Run `npm start`
 
 ## Deployment
-Run `npm start` to deploy both frontend/backend. A local Kubernetes cluster will be created.
-Then `npm run push` to change the default cluster IP/PORT to localhost, the status of each pod will be displayed. This command is necessary to ensure the communication between backend and frontend.
+Run `npm run deploy` to deploy both frontend/backend. A local Kubernetes cluster will be created.
+Then `npm run push` to change the default cluster IP/PORT to localhost, the status of each pod will be displayed. This command is necessary to ensure the communication ports between backend and frontend.
 If needed, use `npm run logs` to check the logs of every pods.
 To stop the deployment, use `npm stop`.
 
