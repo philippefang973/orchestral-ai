@@ -94,8 +94,9 @@ def convert():
         multipart_form_data = {
             'audio': (request.files['audio'].filename, request.files['audio'], request.files['audio'].mimetype)
         }
-        response = requests.post(converter_service_ip+"/convert",
-            files=multipart_form_data,data={"username":session.get('connected')}).json()
+
+        response = requests.post(converter_service_ip+"/convert", 
+                                    files=multipart_form_data,data={"username":session.get('connected')}).json()
         if "conversion" in response : 
             if session["history"] : 
                 session['history']+=[(request.files['audio'].filename,response.get("conversion"))]

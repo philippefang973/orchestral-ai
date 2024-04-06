@@ -9,10 +9,10 @@
   <input type="file" class="file-input" (change)="onUpload($event)" #fileUpload accept=".mp3"/>
   <div *ngIf="file">
     <section [ngSwitch]="status">
-      <p *ngSwitchCase="'uploading'">⏳ Uploading...</p>
+      <p *ngSwitchCase="'uploading'">⏳ Converting... (This might take a few minutes)</p>
       <p *ngSwitchCase="'success'">✅ Converted</p>
       <p *ngSwitchCase="'fail'">❌ Error encountered, please retry</p>
-      <p *ngSwitchDefault>😶 Waiting to upload...</p>
+      <p *ngSwitchDefault>⏳ {{status}}</p>
     </section>
     <section *ngIf='conversion'>
       <audio controls>

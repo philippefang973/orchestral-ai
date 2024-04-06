@@ -3,11 +3,11 @@ flask
 flask_cors
 pymongo[serv]
 requests
-soundfile
-numpy
 kaggle
-spleeter
-basic-pitch
+soundfile
+numpy==1.23.5
+spleeter==2.4.0
+basic-pitch==0.2.6
 pydub
 pysndfx
 midi2audio

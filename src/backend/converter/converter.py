@@ -34,7 +34,13 @@ def convert():
     if result :
         try : 
             app.logger.info(f"User {username} uploaded: {type(audio_file)}")
-            converted_audio, filename, mimetype = audio_conversion_local.convert(audio_file,username,app.logger.info)
+
+            #for p in audio_conversion_local.convert(audio_file,username,app.logger.info) :
+            #    if type(p)==str : 
+            #        return jsonify({"msg":p})
+            #    else :
+            p = audio_conversion_local.convert(audio_file,username,("." if sys.argv[1]=="deploy" else "converter"),app.logger.info)
+            converted_audio, filename, mimetype = p
             file_id = fs.put(converted_audio, filename=filename, content_type=mimetype)
             collection.update_one(query, {"$push": {"history": (file_id,filename)}})
             app.logger.info(f"User {username} converted an audio")
